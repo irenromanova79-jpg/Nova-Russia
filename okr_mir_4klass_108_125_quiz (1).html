@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Окружающий мир · 4 класс · стр. 108–125</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#F0F7F0;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:1rem}
+.wrap{max-width:600px;width:100%}
+.card{border-radius:18px;overflow:hidden;border:1px solid #A9DFBF;position:relative;box-shadow:0 4px 24px rgba(30,132,73,.13)}
+canvas#fx{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:20}
+.pop{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);z-index:15;pointer-events:none;opacity:0;text-align:center;font-weight:700;min-width:180px}
+.pop.ok-anim{animation:popUp .85s ease-out forwards}
+.pop.fail-anim{animation:popFd .7s ease-out forwards}
+.pop.multi-anim{animation:popUp 1s ease-out forwards}
+.pop-big{font-size:26px;line-height:1.1;text-shadow:0 2px 8px rgba(0,0,0,.15)}
+.pop-sm{font-size:13px;margin-top:3px}
+@keyframes popUp{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}65%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-80%)}}
+@keyframes popFd{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}30%{opacity:1;transform:translate(-50%,-50%) scale(1)}75%{opacity:1}100%{opacity:0}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.card.shake-anim{animation:shake .4s ease}
+.hdr{background:linear-gradient(135deg,#0B5345,#1E8449);padding:.85rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.hdr-title{font-size:11px;font-weight:700;color:#ABEBC6;letter-spacing:.8px;text-transform:uppercase}
+.hdr-pills{display:flex;gap:7px;align-items:center}
+.lives{display:flex;gap:3px}
+.hrt{font-size:15px;transition:all .3s}
+.hrt.gone{opacity:.15;transform:scale(.6)}
+.streak-pill{font-size:11px;font-weight:600;padding:3px 9px;border-radius:12px;background:rgba(255,255,255,.15);color:#FDEBD0;white-space:nowrap;transition:opacity .3s}
+.streak-pill.hidden{opacity:0}
+.score-pill{font-size:14px;font-weight:700;color:#F9E79F;min-width:60px;text-align:right;transition:transform .15s}
+.score-pill.bump{transform:scale(1.38)}
+.prog-bar-wrap{background:#0A4033;padding:0 1.1rem .5rem;display:flex;align-items:center;gap:8px}
+.prog-bg{flex:1;height:5px;background:rgba(255,255,255,.2);border-radius:3px;overflow:hidden}
+.prog-fill{height:5px;background:#ABEBC6;border-radius:3px;transition:width .4s ease}
+.prog-lbl{font-size:10px;color:#A9DFBF;min-width:30px;text-align:right}
+.sub{padding:.42rem 1.1rem;display:flex;align-items:center;justify-content:space-between;background:#fff}
+.theme-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px}
+.qnum{font-size:11px;color:#666}
+.dots{display:flex;gap:3px;flex-wrap:wrap;background:#fff;padding:.35rem 1.1rem .15rem}
+.dot{width:9px;height:9px;border-radius:50%;background:#D5F5E3;border:.5px solid #A9DFBF;transition:all .25s}
+.dot.cur{background:#1E8449;border-color:#1E8449;transform:scale(1.4)}
+.dot.ok{background:#27AE60;border-color:#27AE60}
+.dot.fail{background:#E74C3C;border-color:#E74C3C}
+.timer-row{background:#fff;padding:.5rem 1.1rem 0;display:flex;align-items:center;gap:10px}
+.tbar-bg{flex:1;height:6px;background:#D5F5E3;border-radius:4px;overflow:hidden}
+.tbar{height:6px;border-radius:4px;transition:width .1s linear,background .5s}
+.tnum{font-size:12px;font-weight:600;min-width:22px;text-align:right;color:#888}
+.body{background:#fff;padding:.8rem 1.1rem .95rem}
+.year-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;background:#D5F5E3;color:#0B5345;margin-bottom:.45rem}
+.qtxt{font-size:15px;font-weight:500;color:#222;line-height:1.55;margin-bottom:.9rem;min-height:44px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.obtn{display:flex;align-items:center;gap:9px;border-radius:10px;padding:.6rem .8rem;font-size:12.5px;cursor:pointer;text-align:left;width:100%;line-height:1.4;font-weight:500;border:2px solid transparent;transition:transform .12s,filter .15s}
+.obtn:hover:not(:disabled){transform:scale(1.04);filter:brightness(1.07)}
+.obtn:disabled{cursor:default}
+.oa{background:#EAF7EC;color:#0B5345}
+.ob{background:#EBF5FB;color:#1A5276}
+.oc{background:#FEF9E7;color:#7D6608}
+.od{background:#FDEDEC;color:#922B21}
+.obtn.correct{border-color:#27AE60;background:#D5F5E3;color:#1E8449;transform:scale(1.03)}
+.obtn.wrong{border-color:#E74C3C;background:#FDEDEC;color:#922B21;opacity:.9}
+.obtn.timeout-mark{border-color:#E67E22;background:#FDEBD0;color:#784212}
+.lbl{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;background:rgba(0,0,0,.1)}
+.bot{background:#EAFAF1;border-top:1px solid #A9DFBF;padding:.6rem 1.1rem;min-height:44px;display:flex;gap:10px;align-items:center}
+.fact{font-size:12px;color:#555;flex:1;line-height:1.5}
+.fact.ok{color:#1E8449;font-weight:500}
+.fact.fail{color:#922B21;font-weight:500}
+.fact.tout{color:#784212;font-weight:500}
+.nxbtn{padding:.45rem 1rem;font-size:12.5px;font-weight:600;border-radius:8px;border:none;color:#fff;background:#1E8449;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.nxbtn:hover{background:#0B5345}
+.res{background:#fff;padding:1.5rem 1.2rem;text-align:center}
+.res-emoji{font-size:40px;margin-bottom:.35rem}
+.res-score{font-size:50px;font-weight:700;color:#1E8449;line-height:1}
+.res-lbl{font-size:14px;color:#888}
+.res-stars{font-size:1.8rem;letter-spacing:3px;color:#D4AC0D;margin:.35rem 0}
+.res-msg{font-size:14px;color:#333;margin:.6rem 0 .9rem;line-height:1.5}
+.res-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:1.1rem}
+.rs{background:#EAF7EC;border-radius:9px;padding:.5rem}
+.rs-n{font-size:20px;font-weight:700;color:#333}
+.rs-l{font-size:10px;color:#888}
+.theme-scores{margin:.8rem 0 1rem;text-align:left}
+.ts-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:12px}
+.ts-name{flex:1;color:#555}
+.ts-bar-bg{width:110px;height:6px;background:#D5F5E3;border-radius:3px;overflow:hidden;flex-shrink:0}
+.ts-bar{height:6px;border-radius:3px;transition:width .5s ease}
+.ts-pct{min-width:34px;text-align:right;font-weight:600;color:#333;font-size:11px}
+.rbtn{padding:.6rem 2rem;font-size:14px;font-weight:600;border-radius:9px;border:none;color:#fff;background:#27AE60;cursor:pointer}
+.rbtn:hover{background:#1E8449}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card" id="card">
+<canvas id="fx"></canvas>
+<div class="pop" id="pop"><div class="pop-big" id="popBig"></div><div class="pop-sm" id="popSm"></div></div>
+
+<div class="hdr">
+  <div class="hdr-title">🇷🇺 Окружающий мир · 4 класс · стр. 108–125</div>
+  <div class="hdr-pills">
+    <div class="lives" id="lives"></div>
+    <div class="streak-pill hidden" id="streak"></div>
+    <div class="score-pill" id="score">⭐ 0</div>
+  </div>
+</div>
+<div class="prog-bar-wrap">
+  <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div class="prog-lbl" id="progLbl">0 / 38</div>
+</div>
+
+<div class="sub" id="sub">
+  <span class="theme-tag" id="ttag"></span>
+  <span class="qnum" id="qnum"></span>
+</div>
+
+<div id="game">
+  <div class="dots" id="dots"></div>
+  <div class="timer-row">
+    <div class="tbar-bg"><div class="tbar" id="tbar" style="width:100%;background:#27AE60"></div></div>
+    <div class="tnum" id="tnum">15</div>
+  </div>
+  <div class="body">
+    <div class="year-badge" id="ybadge"></div>
+    <div class="qtxt" id="qtxt"></div>
+    <div class="opts" id="opts"></div>
+  </div>
+  <div class="bot" id="bot" style="display:none">
+    <div class="fact" id="fact"></div>
+    <button class="nxbtn" id="nxbtn" onclick="nextQ()">Дальше →</button>
+  </div>
+</div>
+
+<div id="res" style="display:none"></div>
+</div>
+</div>
+
+<script>
+const THEMES=[
+  {name:"📜 Конституция и права",bg:"#D5F5E3",col:"#0B5345"},
+  {name:"🏛️ Мы — граждане России",bg:"#D6EAF8",col:"#1A5276"},
+  {name:"🦅 Символы России",bg:"#FDEBD0",col:"#784212"},
+  {name:"🎉 Праздники России",bg:"#FDEDEC",col:"#922B21"}
+];
+
+const QS=[
+  // ===== КОНСТИТУЦИЯ И ПРАВА =====
+  {t:0,y:"Россия",q:"Другое официальное название нашей страны — Российская Федерация. Что означает слово «федерация»?",opts:["Государство","Союз, объединение","Республика","Независимость"],c:1,f:"«Федерация» в переводе с латинского — «союз, объединение». Российскую Федерацию образуют республики, области, края и другие субъекты."},
+  {t:0,y:"Россия",q:"Сколько народов живёт в России?",opts:["Около 50","Около 100","Более 190","Более 500"],c:2,f:"В России живёт более 190 народов: русские, татары, башкиры, чуваши, чеченцы, армяне, белорусы и многие другие."},
+  {t:0,y:"Конституция 1993",q:"Как называется Основной закон России?",opts:["Декларация","Конвенция","Конституция","Кодекс"],c:2,f:"Конституция — основной закон страны, принятый в 1993 году. Все остальные законы не должны ей противоречить."},
+  {t:0,y:"1993",q:"В каком году была принята Конституция России?",opts:["1917","1945","1991","1993"],c:3,f:"12 декабря 1993 года — важная дата в истории России. В этот день мы отмечаем День Конституции."},
+  {t:0,y:"Конституция",q:"Что в переводе с латинского означает слово «конституция»?",opts:["Закон","Устройство, постановление","Власть","Государство"],c:1,f:"«Конституция» от латинского — «устройство, постановление». Она определяет, как устроено наше государство."},
+  {t:0,y:"Конституция",q:"Какая главная мысль закреплена в Конституции России?",opts:["Государство — главная ценность","Армия — главная сила страны","Человек, его права и свободы — высшая ценность","Природа — главное богатство"],c:2,f:"«Человек, его права и свободы являются высшей ценностью» — главная мысль нашей Конституции."},
+  {t:0,y:"10 декабря 1948",q:"Когда была принята Всеобщая декларация прав человека?",opts:["10 декабря 1945 г.","10 декабря 1948 г.","20 ноября 1989 г.","12 декабря 1993 г."],c:1,f:"Всеобщая декларация прав человека принята ООН 10 декабря 1948 года. «Декларация» в переводе — «заявление»."},
+  {t:0,y:"Декларация 1948",q:"С каких слов начинается Всеобщая декларация прав человека?",opts:["«Все государства рождаются равными»","«Все люди рождаются свободными и равными в своём достоинстве и правах»","«Все дети имеют право на защиту»","«Каждый человек обязан соблюдать законы»"],c:1,f:"Эти прекрасные слова говорят нам: права принадлежат каждому из нас просто потому, что мы родились на свет."},
+  {t:0,y:"20 ноября 1989",q:"Как называется международный документ, защищающий права детей?",opts:["Декларация прав ребёнка","Конституция ООН","Конвенция о правах ребёнка","Манифест о детях"],c:2,f:"Конвенция о правах ребёнка принята ООН 20 ноября 1989 года. Ребёнком считается каждый до 18 лет."},
+  {t:0,y:"Конвенция 1989",q:"До какого возраста человек считается ребёнком согласно Конвенции о правах ребёнка?",opts:["До 14 лет","До 16 лет","До 18 лет","До 21 года"],c:2,f:"Конвенция говорит: ребёнком считается каждый юный житель планеты до 18 лет."},
+  {t:0,y:"Права ребёнка",q:"Какое право ребёнка указано в Конвенции о правах ребёнка?",opts:["Право на автомобиль","Право на бесплатное образование","Право не ходить в школу","Право на собственную квартиру"],c:1,f:"Ребёнок имеет право на жизнь, имя, заботу родителей, бесплатное образование, отдых, занятия спортом и охрану здоровья."},
+  {t:0,y:"Сириус",q:"В каком городе работает образовательный центр «Сириус» для одарённых детей?",opts:["Москва","Санкт-Петербург","Сочи","Казань"],c:2,f:"Образовательный центр «Сириус» в Сочи создан для выявления и поддержки одарённых детей в искусстве, спорте и науке."},
+  // ===== МЫ — ГРАЖДАНЕ РОССИИ =====
+  {t:1,y:"Гражданин",q:"Что обязан делать гражданин России?",opts:["Только пользоваться правами","Исполнять законы государства","Только платить налоги","Только участвовать в выборах"],c:1,f:"Гражданин исполняет законы государства и имеет право на поддержку, защиту государства, а также право на управление страной."},
+  {t:1,y:"Права",q:"С какого возраста граждане России имеют право участвовать в выборах?",opts:["С 14 лет","С 16 лет","С 18 лет","С 21 года"],c:2,f:"С 18 лет граждане России имеют право избирать и быть избранными на государственные посты. Стать народным избранником — почётно и ответственно!"},
+  {t:1,y:"Обязанности",q:"Что является важной обязанностью граждан России?",opts:["Служить в церкви","Защита Отечества","Посещать все праздники","Знать иностранные языки"],c:1,f:"Важные обязанности граждан: соблюдение Конституции и законов, забота о природе и культурном наследии, защита Отечества."},
+  {t:1,y:"Президент",q:"Кто является главой Российского государства?",opts:["Председатель Правительства","Президент РФ","Председатель Государственной Думы","Председатель Совета Федерации"],c:1,f:"Главой нашего государства является Президент Российской Федерации. Он избирается гражданами страны."},
+  {t:1,y:"Президент",q:"На какой срок избирается Президент России?",opts:["На 4 года","На 5 лет","На 6 лет","На 7 лет"],c:2,f:"Президент Российской Федерации избирается сроком на 6 лет гражданами страны."},
+  {t:1,y:"Президент",q:"Кем является Президент России по отношению к армии?",opts:["Главным министром","Верховным главнокомандующим Вооружёнными Силами","Начальником полиции","Главным судьёй"],c:1,f:"Президент является Верховным главнокомандующим Вооружёнными Силами России и определяет основные направления политики страны."},
+  {t:1,y:"Парламент",q:"Как называется парламент России?",opts:["Государственный Совет","Государственная Дума","Федеральное Собрание","Сенат"],c:2,f:"Парламентом страны является Федеральное Собрание. Оно состоит из двух палат: Совета Федерации и Государственной Думы."},
+  {t:1,y:"Парламент",q:"Из каких двух палат состоит Федеральное Собрание?",opts:["Думы и Сената","Государственной Думы и Совета Федерации","Верховного совета и Думы","Парламента и Сената"],c:1,f:"Государственная Дума принимает законы, а Совет Федерации одобряет или отклоняет их. Закон подписывает Президент."},
+  {t:1,y:"Законы",q:"Кто принимает законы в России?",opts:["Президент","Правительство","Государственная Дума","Суд"],c:2,f:"Государственная Дума принимает законы. Затем Совет Федерации их одобряет или отклоняет, и наконец Президент подписывает."},
+  {t:1,y:"Правительство",q:"Чем занимается Правительство Российской Федерации?",opts:["Принимает законы","Разрабатывает меры по развитию хозяйства и культуры","Избирает Президента","Охраняет границы"],c:1,f:"Правительство РФ разрабатывает меры по развитию хозяйства, культуры и других областей жизни, обеспечивает национальные проекты."},
+  // ===== СИМВОЛЫ РОССИИ =====
+  {t:2,y:"Герб",q:"Что изображено на Государственном гербе России?",opts:["Медведь с короной","Золотой двуглавый орёл на красном щите","Чёрный орёл на золотом щите","Белый орёл на синем щите"],c:1,f:"На красном щите — золотой двуглавый орёл под тремя коронами. В правой лапе — скипетр, в левой — держава."},
+  {t:2,y:"Герб",q:"Что держит орёл в правой лапе на гербе России?",opts:["Державу","Скипетр (жезл)","Меч","Ветку"],c:1,f:"В правой лапе орла — скипетр (жезл), в левой — держава (золотой шар с крестом). Они говорят о сильной власти государства."},
+  {t:2,y:"Герб",q:"Что символизирует всадник на гербе России, поражающий дракона?",opts:["Победу над врагом в конкретной битве","Готовность народа встать на защиту родной земли","Историю Москвы","Православную веру"],c:1,f:"Всадник — это святой Георгий Победоносец. Он символизирует готовность народа встать на защиту родной земли."},
+  {t:2,y:"Герб",q:"Почему у орла на гербе России две головы, повёрнутые в разные стороны?",opts:["Потому что так красивее","Россия расположена в двух частях света — Европе и Азии","В честь двух побед над врагами","В знак двух столиц — Москвы и Петербурга"],c:1,f:"Две головы орла, повёрнутые в разные стороны, символизируют то, что Россия расположена в Европе и в Азии."},
+  {t:2,y:"Флаг",q:"В каком порядке расположены цвета российского флага сверху вниз?",opts:["Красный, синий, белый","Синий, белый, красный","Белый, синий, красный","Белый, красный, синий"],c:2,f:"Флаг России — три горизонтальные полосы: белая, синяя и красная сверху вниз. Запомни: Бело-Сине-Красный!"},
+  {t:2,y:"Конец XVII в.",q:"На каком корабле впервые в России появился бело-сине-красный флаг?",opts:["«Аврора»","«Орёл»","«Победа»","«Россия»"],c:1,f:"Впервые бело-сине-красный флаг появился в конце XVII века на первом боевом корабле «Орёл». Такой порядок цветов ввёл Пётр Первый."},
+  {t:2,y:"22 августа",q:"Какой праздник отмечается 22 августа?",opts:["День России","День Конституции","День Государственного флага России","День народного единства"],c:2,f:"22 августа — День Государственного флага Российской Федерации. В 1991 году Россия вновь обрела свой исторический флаг."},
+  {t:2,y:"Гимн",q:"Кто написал музыку Государственного гимна России?",opts:["С. В. Михалков","А. В. Александров","П. И. Чайковский","М. И. Глинка"],c:1,f:"Музыку гимна написал композитор А. В. Александров, а слова — поэт С. В. Михалков."},
+  {t:2,y:"Гимн",q:"Кто написал слова Государственного гимна России?",opts:["А. В. Александров","А. С. Пушкин","С. В. Михалков","Л. Н. Толстой"],c:2,f:"Слова гимна написал поэт Сергей Владимирович Михалков, музыку — Александр Васильевич Александров."},
+  {t:2,y:"Гимн",q:"Когда исполняется Государственный гимн России в новогоднюю ночь?",opts:["В полночь, после 12 ударов Кремля","Ровно в 23:00","В 12 дня 1 января","В момент поднятия флага"],c:0,f:"Государственный гимн звучит в новогоднюю ночь после того, как часы на Спасской башне Московского Кремля пробьют двенадцать."},
+  {t:2,y:"Гимн",q:"Как нужно вести себя при исполнении Государственного гимна?",opts:["Все садятся и слушают","Все встают, мужчины снимают головные уборы","Все аплодируют","Можно продолжать разговаривать"],c:1,f:"На торжественных церемониях при исполнении гимна все встают, мужчины снимают головные уборы, военные выполняют воинское приветствие."},
+  // ===== ПРАЗДНИКИ =====
+  {t:3,y:"12 июня",q:"Какой государственный праздник отмечается 12 июня?",opts:["День Конституции","День народного единства","День России","День Победы"],c:2,f:"12 июня — День России. Это праздник всего многонационального народа нашей страны."},
+  {t:3,y:"4 ноября",q:"О каких событиях напоминает праздник 4 ноября — День народного единства?",opts:["О победе в войне 1812 года","О принятии Конституции","О событиях 1612 года, когда народ защитил Родину","О полёте Гагарина в космос"],c:2,f:"4 ноября напоминает о событиях 1612 года, когда народ, объединившись, прогнал захватчиков и защитил Родину."},
+  {t:3,y:"12 декабря",q:"Что отмечается 12 декабря?",opts:["День России","День народного единства","День флага","День Конституции"],c:3,f:"12 декабря 1993 года была принята Конституция России. С тех пор этот день отмечается как День Конституции."},
+  {t:3,y:"23 февраля",q:"Как называется праздник 23 февраля?",opts:["День России","День народного единства","День защитника Отечества","День Победы"],c:2,f:"23 февраля — День защитника Отечества. Мы вспоминаем героев и поздравляем всех, кто охраняет мир на нашей Земле."},
+  {t:3,y:"9 мая",q:"Что символизируют чёрно-оранжевые георгиевские ленточки?",opts:["Цвета российского флага","Символ памяти о Великой Победе","Цвета ордена Кутузова","Символ Нового года"],c:1,f:"Георгиевские ленточки — символ памяти о Великой Победе, свидетельство уважения к воинам, их доблести и мужеству."},
+  {t:3,y:"9 мая",q:"Как называется шествие 9 мая, в котором люди несут портреты своих близких — победителей?",opts:["Парад Победы","Бессмертный полк","Вечный огонь","Марш памяти"],c:1,f:"«Бессмертный полк» — трогательная традиция. Миллионы россиян несут портреты своих близких-победителей в разных городах страны и мира."},
+  {t:3,y:"1 января 1700",q:"При каком царе в России стали встречать Новый год 1 января?",opts:["При Иване Грозном","При Екатерине II","При Петре Первом","При Александре II"],c:2,f:"Пётр Первый повелел встречать Новый год 1 января. Первый раз это произошло 1 января 1700 года в Москве. Он же ввёл традицию украшать ёлку."},
+  {t:3,y:"7 января",q:"Какой христианский праздник отмечается 7 января?",opts:["Пасха","Крещение","Рождество Христово","Троица"],c:2,f:"7 января — Рождество Христово. Во всех храмах страны проходят торжественные богослужения."}
+];
+
+const LBLS=["А","Б","В","Г"],LCLS=["oa","ob","oc","od"];
+const TIME=15,BASE=100,SPEED_MAX=50;
+let cur=0,score=0,streak=0,maxStreak=0,corCount=0,lives=5,answered=false,tid=null,tLeft=TIME,confAF=null;
+let themeStats={};
+THEMES.forEach((_,i)=>themeStats[i]={ok:0,total:0});
+QS.forEach(q=>themeStats[q.t].total++);
+
+function getM(){return streak>=6?3:streak>=4?2:streak>=2?1.5:1}
+function prevM(){const s=streak-1;return s>=6?3:s>=4?2:s>=2?1.5:1}
+
+function buildLives(){
+  const b=document.getElementById('lives');b.innerHTML='';
+  for(let i=0;i<5;i++){const h=document.createElement('span');h.className='hrt'+(i>=lives?' gone':'');h.id='hrt'+i;h.textContent='💚';b.appendChild(h);}
+}
+function buildDots(){
+  const d=document.getElementById('dots');d.innerHTML='';
+  QS.forEach((_,i)=>{const s=document.createElement('div');s.className='dot'+(i===0?' cur':'');s.id='d'+i;d.appendChild(s);});
+}
+function setDot(i,cls){
+  const d=document.getElementById('d'+i);if(d)d.className='dot '+cls;
+  if(i+1<QS.length){const n=document.getElementById('d'+(i+1));if(n)n.className='dot cur';}
+}
+function updateProg(){
+  const pct=Math.round((cur/QS.length)*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progLbl').textContent=cur+' / '+QS.length;
+}
+function loadQ(){
+  answered=false;tLeft=TIME;updateProg();
+  const q=QS[cur],th=THEMES[q.t];
+  const tt=document.getElementById('ttag');
+  tt.textContent=th.name;tt.style.background=th.bg;tt.style.color=th.col;
+  document.getElementById('qnum').textContent='Вопрос '+(cur+1)+' / '+QS.length;
+  document.getElementById('ybadge').textContent='📌 '+q.y;
+  document.getElementById('qtxt').textContent=q.q;
+  const og=document.getElementById('opts');og.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='obtn '+LCLS[i];
+    b.innerHTML='<span class="lbl">'+LBLS[i]+'</span><span>'+o+'</span>';
+    b.onclick=()=>doAns(i);og.appendChild(b);
+  });
+  document.getElementById('bot').style.display='none';
+  updateTimerUI();startTimer();
+}
+function startTimer(){
+  clearInterval(tid);updateTimerUI();
+  tid=setInterval(()=>{tLeft--;updateTimerUI();if(tLeft<=0){clearInterval(tid);onTimeout();}},1000);
+}
+function updateTimerUI(){
+  const pct=(tLeft/TIME)*100;
+  const tb=document.getElementById('tbar');
+  tb.style.width=pct+'%';
+  tb.style.background=tLeft>8?'#27AE60':tLeft>4?'#E67E22':'#E74C3C';
+  document.getElementById('tnum').textContent=tLeft;
+}
+function onTimeout(){
+  if(answered)return;answered=true;
+  const btns=document.querySelectorAll('.obtn');btns.forEach(b=>b.disabled=true);
+  btns[QS[cur].c].classList.add('timeout-mark');
+  loseLife();streak=0;updateStreak();setDot(cur,'fail');
+  showBot('Время вышло! Правильный ответ выделен.','tout',QS[cur].f);
+}
+function doAns(idx){
+  if(answered)return;answered=true;clearInterval(tid);
+  const q=QS[cur];
+  const btns=document.querySelectorAll('.obtn');btns.forEach(b=>b.disabled=true);
+  if(idx===q.c){
+    corCount++;themeStats[q.t].ok++;
+    const m=getM();streak++;if(streak>maxStreak)maxStreak=streak;
+    const spd=Math.round((tLeft/TIME)*SPEED_MAX);
+    const pts=Math.round((BASE+spd)*m);score+=pts;
+    btns[idx].classList.add('correct');setDot(cur,'ok');
+    updateScore(true);
+    const nm=getM();
+    if(nm>prevM()&&streak>1){
+      showPop('multi-anim',nm===3?'🔥 СЕРИЯ x3!':nm===2?'🔥 СЕРИЯ x2!':'🔥 x1.5!','Бонус активен!','#D4AC0D');
+    } else {
+      const msgs=['Верно! 🎉','Отлично! 🌟','Молодец! ⭐','Знаток! 🏆','Правильно! ✅'];
+      showPop('ok-anim',msgs[Math.floor(Math.random()*msgs.length)],'+'+pts+' очков','#1E8449');
+    }
+    updateStreak();confetti();showBot('','ok',q.f);
+  } else {
+    btns[idx].classList.add('wrong');btns[q.c].classList.add('correct');
+    streak=0;updateStreak();loseLife();setDot(cur,'fail');
+    shakeCard();
+    showPop('fail-anim','Не угадал 😬','Смотри правильный ответ','#E74C3C');
+    showBot('Неверно. ','fail',q.f);
+  }
+  document.getElementById('nxbtn').textContent=cur===QS.length-1?'Итоги 🏁':'Дальше →';
+}
+function showBot(pre,cls,fact){
+  const f=document.getElementById('fact');
+  f.innerHTML='<b>'+pre+'</b>'+fact;f.className='fact '+cls;
+  document.getElementById('bot').style.display='flex';
+}
+function loseLife(){
+  if(lives>0){lives--;const h=document.getElementById('hrt'+lives);if(h)h.className='hrt gone';}
+}
+function updateScore(bump){
+  const p=document.getElementById('score');p.textContent='⭐ '+score;
+  if(bump){p.classList.add('bump');setTimeout(()=>p.classList.remove('bump'),250);}
+}
+function updateStreak(){
+  const sb=document.getElementById('streak');
+  if(streak>=2){sb.textContent='🔥 '+streak+' подряд';sb.classList.remove('hidden');}
+  else sb.classList.add('hidden');
+}
+function showPop(anim,big,sm,col){
+  const el=document.getElementById('pop');
+  el.className='pop';void el.offsetWidth;
+  document.getElementById('popBig').textContent=big;document.getElementById('popBig').style.color=col;
+  document.getElementById('popSm').textContent=sm;document.getElementById('popSm').style.color=col;
+  el.className='pop '+anim;
+}
+function shakeCard(){const c=document.getElementById('card');c.classList.remove('shake-anim');void c.offsetWidth;c.classList.add('shake-anim');}
+function confetti(){
+  const cvs=document.getElementById('fx'),card=document.getElementById('card');
+  cvs.width=card.offsetWidth;cvs.height=card.offsetHeight;
+  const ctx=cvs.getContext('2d');
+  const cols=['#1E8449','#D4AC0D','#E74C3C','#2980B9','#F39C12','#1ABC9C','#27AE60'];
+  const ps=[];
+  for(let i=0;i<55;i++)ps.push({x:Math.random()*cvs.width,y:-8,w:5+Math.random()*7,h:3+Math.random()*4,col:cols[Math.floor(Math.random()*cols.length)],vx:(Math.random()-.5)*5.5,vy:1.5+Math.random()*4,rot:Math.random()*360,vr:(Math.random()-.5)*13});
+  if(confAF)cancelAnimationFrame(confAF);
+  function draw(){
+    ctx.clearRect(0,0,cvs.width,cvs.height);let alive=false;
+    ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;p.vy+=.14;
+      if(p.y<cvs.height+20)alive=true;
+      const a=Math.max(0,1.2-(p.y/cvs.height)*1.5);
+      ctx.save();ctx.globalAlpha=a;ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.col;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();
+    });
+    if(alive)confAF=requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,cvs.width,cvs.height);
+  }draw();
+}
+function nextQ(){cur++;if(cur>=QS.length)showRes();else loadQ();}
+function showRes(){
+  clearInterval(tid);
+  document.getElementById('game').style.display='none';
+  document.getElementById('sub').style.display='none';
+  document.getElementById('progFill').style.width='100%';
+  document.getElementById('progLbl').textContent=QS.length+' / '+QS.length;
+  const pct=Math.round(corCount/QS.length*100);
+  const sc=Math.min(5,Math.ceil(pct/20));
+  const stars='⭐'.repeat(sc)+'☆'.repeat(5-sc);
+  let emoji,title,msg;
+  if(pct>=90){emoji='🏆';title='Ты — знаток России!';msg='Превосходно! Конституцию, символы и праздники — всё знаешь на отлично!';}
+  else if(pct>=75){emoji='🌟';title='Отличный результат!';msg='Молодец! Повтори слабые темы на шкале ниже — и будет идеально.';}
+  else if(pct>=55){emoji='👍';title='Хороший старт!';msg:'Неплохо. Обрати особое внимание на темы, где было меньше правильных ответов.';}
+  else{emoji='📖';title='Ещё раз — и всё получится!';msg='Перечитай учебник и попробуй снова!';}
+  let tsHTML='<div class="theme-scores">';
+  THEMES.forEach((th,i)=>{
+    const st=themeStats[i];
+    const p=st.total>0?Math.round((st.ok/st.total)*100):0;
+    const barCol=p>=80?'#27AE60':p>=50?'#E67E22':'#E74C3C';
+    tsHTML+='<div class="ts-row"><span class="ts-name">'+th.name+'</span><div class="ts-bar-bg"><div class="ts-bar" style="width:'+p+'%;background:'+barCol+'"></div></div><span class="ts-pct">'+st.ok+'/'+st.total+'</span></div>';
+  });
+  tsHTML+='</div>';
+  document.getElementById('res').innerHTML='<div class="res"><div class="res-emoji">'+emoji+'</div><div class="res-score">'+score+'</div><div class="res-lbl">очков набрано</div><div class="res-stars">'+stars+'</div><div style="font-size:15px;font-weight:700;color:#333;margin:.25rem 0">'+title+'</div><div class="res-grid" style="margin-top:.7rem"><div class="rs"><div class="rs-n">'+corCount+'/'+QS.length+'</div><div class="rs-l">правильных</div></div><div class="rs"><div class="rs-n">'+pct+'%</div><div class="rs-l">точность</div></div><div class="rs"><div class="rs-n">'+maxStreak+'</div><div class="rs-l">серия</div></div><div class="rs"><div class="rs-n">'+score+'</div><div class="rs-l">очков</div></div></div>'+tsHTML+'<div class="res-msg">'+msg+'</div><button class="rbtn" onclick="restart()">Пройти ещё раз 🔄</button></div>';
+  document.getElementById('res').style.display='block';
+  if(pct>=70)confetti();
+}
+function restart(){
+  cur=0;score=0;streak=0;maxStreak=0;corCount=0;lives=5;answered=false;
+  THEMES.forEach((_,i)=>themeStats[i]={ok:0,total:0});
+  QS.forEach(q=>themeStats[q.t].total++);
+  document.getElementById('score').textContent='⭐ 0';
+  document.getElementById('streak').classList.add('hidden');
+  document.getElementById('res').style.display='none';
+  document.getElementById('sub').style.display='flex';
+  document.getElementById('game').style.display='block';
+  buildLives();buildDots();loadQ();
+}
+buildLives();buildDots();loadQ();
+</script>
+</body>
+</html>
